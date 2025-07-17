@@ -3,7 +3,7 @@ import React, { createContext, useState } from "react";
 export const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState(null);
 
   const value = {
     user, 
