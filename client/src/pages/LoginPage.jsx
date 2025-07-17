@@ -1,9 +1,12 @@
 import React from 'react';
 
 const LoginPage = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>Login Page</h1>
-    <p>Login to your account.</p>
+  <div className='absolute top-0 left-0 right-0 
+  bottom-0 z-10 backdrop-blur-sm bg-black/30 flex
+  justify-center items-center'>
+    <form>
+      <h1>Sign Up</h1>
+    </form>
   </div>
 );
 

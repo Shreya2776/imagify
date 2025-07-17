@@ -9,7 +9,7 @@ import sample_img_1 from "./assets/sample_img_1.png";
 import sample_img_2 from "./assets/sample_img_2.png";
 import GenerateBtn from './components/GenerateBtn';
 import Testimonials from './components/Testimonials';
-
+import Result from './pages/Result';
 import BuyPage from './pages/BuyPage';
 import LoginPage from './pages/LoginPage';
 
@@ -174,7 +174,7 @@ const App = () => {
         right: 0,
         bottom: 0,
         zIndex: 0,
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'
+        background: 'linear-gradient(135deg, #0f172a 0%, #172a4a 50%, #0f172a 100%)'
       }}>
         <div style={{
           position: 'absolute',
@@ -223,6 +223,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/buy" element={<BuyPage />} />
+          <Route path="/result" element={<Result />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>
       </div>
