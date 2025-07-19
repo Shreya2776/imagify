@@ -1,5 +1,6 @@
 import React from 'react';
-
+import {motion} from "framer-motion"
+import { assets } from '../assets/assets';
 const Hero = () => {
   return (
     <div className="rounded-2xl p-8" style={{ backgroundColor: '#1e1e1e', 

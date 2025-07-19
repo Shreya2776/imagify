@@ -5,7 +5,7 @@ import profileImg from '../assets/profile_new.png';
 import { assets } from '../assets/assets'; // Make sure logo_icon is exported from assets
 
 const Navbar = () => {
-  const { user, setUser } = useContext(AppContext);
+  const { user, setUser, setShowLogin } = useContext(AppContext);
   const navigate = useNavigate();
 
   return (
@@ -71,8 +71,9 @@ const Navbar = () => {
             Pricing
           </button>
           <button 
-            onClick={() => navigate('/login')}
-            className="px-6 py-2.5 text-sm font-semibold rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+            onClick={() => setShowLogin(true)}
+            className="px-6 py-2.5 text-sm font-semibold rounded-full 
+            bg-blue-500 text-white hover:bg-blue-600 transition-colors"
           >
             Login
           </button>

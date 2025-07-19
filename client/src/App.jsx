@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/navbar';
 import Footer from './components/Footer';
@@ -12,6 +12,7 @@ import Testimonials from './components/Testimonials';
 import Result from './pages/Result';
 import BuyPage from './pages/BuyPage';
 import LoginPage from './pages/LoginPage';
+import { AppContext } from './context/AppContext';
 
 const Home = () => (
   <>
@@ -153,10 +154,11 @@ const Home = () => (
       <GenerateBtn />
       <Footer />
     </div>
-  </>
+  </> 
 );
 
 const App = () => {
+  const{ showLogin } = useContext(AppContext);
   return (
     // ❌ Removed <Router> here (already exists in main.jsx)
     <div style={{
@@ -165,8 +167,14 @@ const App = () => {
       backgroundColor: '#0f172a',
       color: 'white',
     }}>
-      <Navbar />
       
+      <Navbar />
+      {showLogin && (
+        <div className="fixed inset-0 z-50">
+          <LoginPage />
+        </div>
+      )}
+
       <div style={{
         position: 'fixed',
         top: 0,
@@ -224,7 +232,6 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/buy" element={<BuyPage />} />
           <Route path="/result" element={<Result />} />
-          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </div>
 
