@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom'; // ✅ Only need Routes and Route
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/navbar';
 import Footer from './components/Footer';
 import Steps from './components/Steps';
@@ -166,7 +166,7 @@ const App = () => {
       color: 'white',
     }}>
       <Navbar />
-
+      
       <div style={{
         position: 'fixed',
         top: 0,

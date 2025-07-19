@@ -2,8 +2,10 @@ import React from 'react';
 
 const Hero = () => {
   return (
-    <div className="rounded-2xl p-8" style={{ backgroundColor: '#1e1e1e', boxShadow: '0 8px 20px rgba(0,0,0,0.3)' }}>
-      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 mx-auto" style={{ backgroundColor: '#242424', border: '1px solid #333333', color: '#A1A1AA' }}>
+    <div className="rounded-2xl p-8" style={{ backgroundColor: '#1e1e1e', 
+    boxShadow: '0 8px 20px rgba(0,0,0,0.3)' }}>
+      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 mx-auto" 
+      style={{ backgroundColor: '#242424', border: '1px solid #333333', color: '#A1A1AA' }}>
         <span>✨ Best text to image generator</span>
       </div>
       <h1 className="text-center mb-6" style={{ fontSize: '3rem', fontWeight: 'bold', color: '#ffffff', lineHeight: '1.2' }}>
