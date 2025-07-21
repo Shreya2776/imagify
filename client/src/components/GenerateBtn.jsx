@@ -1,7 +1,21 @@
-import React from 'react'
+import React from "react";
 import {assets} from '../assets/assets'
+import { AppContext } from '../context/AppContext';
+import { useNavigate } from 'react-router-dom'; 
+import { useContext } from 'react';
 const GenerateBtn = () => {
+  const { user, setShowLogin } = useContext(AppContext); // ✅ valid inside function block
+  const navigate = useNavigate(); // ❗ don't call useNavigate('/result'), just call useNavigate()
+
+  const onClickHandler = () => {
+    if (user) {
+      navigate('/result'); // ✅ navigate function call
+    } else {
+      setShowLogin(true);
+    }
+  }
   return (
+    
     <div className="pb-20 flex flex-col items-center justify-center w-full">
       <div
         className="relative w-full max-w-xl rounded-3xl p-10 mb-8 shadow-2xl border border-slate-800 backdrop-blur-md flex flex-col items-center justify-center overflow-hidden"
@@ -21,7 +35,7 @@ const GenerateBtn = () => {
           See the magic. Try now
         </h1>
             <div className="flex justify-center w-full relative z-20">
-          <button
+          <button onClick={onClickHandler}
             className="inline-flex items-center gap-3 px-12 py-4 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 text-white font-semibold text-lg shadow-xl hover:scale-110 hover:shadow-blue-400/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 border-2 border-blue-400/30"
             style={{
               boxShadow: '0 4px 24px 0 #3B82F6AA, 0 0 0 4px #33415544',
@@ -38,7 +52,7 @@ const GenerateBtn = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default GenerateBtn

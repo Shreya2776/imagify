@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/navbar';
 import Footer from './components/Footer';
 import Steps from './components/Steps';
+import { useNavigate } from 'react-router-dom'; 
 import Description from './components/Description';
 import star_group from "./assets/star_group.png";
 import sample_img_1 from "./assets/sample_img_1.png";
@@ -14,7 +15,18 @@ import BuyPage from './pages/BuyPage';
 import LoginPage from './pages/LoginPage';
 import { AppContext } from './context/AppContext';
 
-const Home = () => (
+const Home = () => {
+  const { user, setShowLogin } = useContext(AppContext); // ✅ valid inside function block
+  const navigate = useNavigate(); // ❗ don't call useNavigate('/result'), just call useNavigate()
+
+  const onClickHandler = () => {
+    if (user) {
+      navigate('/result'); // ✅ navigate function call
+    } else {
+      setShowLogin(true);
+    }
+  };
+  return(
   <>
     <div style={{
       position: 'relative',
@@ -111,6 +123,7 @@ const Home = () => (
             }}
           />
           <button
+            onClick={onClickHandler}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -155,7 +168,8 @@ const Home = () => (
       <Footer />
     </div>
   </> 
-);
+  );
+};
 
 const App = () => {
   const{ showLogin } = useContext(AppContext);
