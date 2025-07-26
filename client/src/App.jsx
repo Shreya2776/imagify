@@ -14,7 +14,8 @@ import Result from './pages/Result';
 import BuyPage from './pages/BuyPage';
 import LoginPage from './pages/LoginPage';
 import { AppContext } from './context/AppContext';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const Home = () => {
   const { user, setShowLogin } = useContext(AppContext); // ✅ valid inside function block
   const navigate = useNavigate(); // ❗ don't call useNavigate('/result'), just call useNavigate()
@@ -102,26 +103,14 @@ const Home = () => {
       </div>
 
       <div style={{
-        backgroundColor: '#1e293b',
+        alignItems: 'center',
         padding: '2rem',
         borderRadius: '1rem',
         width: '100%',
         maxWidth: '500px'
       }}>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <input 
-            type="text" 
-            placeholder="Describe your image..." 
-            style={{
-              flex: 1,
-              padding: '1rem',
-              backgroundColor: '#334155',
-              color: 'white',
-              border: '1px solid #475569',
-              borderRadius: '0.5rem',
-              outline: 'none'
-            }}
-          />
+        <div style={{ display: 'flex', gap: '1rem' , alignItems: 'center', justifyContent: 'center' }}>
+          
           <button
             onClick={onClickHandler}
             style={{
@@ -181,7 +170,7 @@ const App = () => {
       backgroundColor: '#0f172a',
       color: 'white',
     }}>
-      
+      <ToastContainer position='bottom-right' />
       <Navbar />
       {showLogin && (
         <div className="fixed inset-0 z-50">

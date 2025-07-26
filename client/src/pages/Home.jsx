@@ -1,11 +1,26 @@
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/navbar';
 import { AppContext } from '../context/AppContext';
 import Hero from '../components/sections/Hero';
 import Steps from '../components/Steps';
+import { toast } from 'react-toastify';
 
 const Home = () => {
-  const { user } = useContext(AppContext);
+  const { user,setShowLogin, prompt,setPrompt } = useContext(AppContext);
+  //changes made here after generating image
+  const navigate = useNavigate();
+  const onClickHandler = () => {
+    if (user) {
+      if (prompt.trim()){
+        navigate('/result'); // Navigate to Result page if prompt is not empty
+      } else{
+        toast.error('Please enter a prompt first!');
+      }
+    } else {
+      setShowLogin(true);
+    }
+  };
   return (
     <div className="min-h-screen">
         
@@ -25,6 +40,8 @@ const Home = () => {
               <input 
                 type="text" 
                 placeholder="Describe your image in detail..." 
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
                 className="flex-1 px-6 py-4 rounded-xl outline-none transition-all"
                 style={{
                   backgroundColor: '#1E1E1E',
@@ -36,6 +53,9 @@ const Home = () => {
                 onBlur={(e) => e.target.style.borderColor = '#333333'}
               />
               <button 
+                onClick={onClickHandler}
+                // new change 
+                disabled={!prompt.trim()}
                 className="px-8 py-4 rounded-xl font-semibold transition-all duration-300"
                 style={{
                   backgroundColor: '#3B82F6',
@@ -50,8 +70,6 @@ const Home = () => {
               </button>
             </div>
           </div>
-            
-            
         </div>
     </div>
   );
