@@ -1,8 +1,131 @@
-// import React, { useState } from 'react';
+
+// import React, { useContext, useState, useEffect } from 'react';
 // import { plans, assets } from '../assets/assets';
+// import { AppContext } from '../context/AppContext';
 
 // const BuyPage = () => {
 //   const [darkMode, setDarkMode] = useState(true);
+//   const [selectedPlan, setSelectedPlan] = useState(null);
+//   const [paymentMessage, setPaymentMessage] = useState('');
+//   const { user, purchaseCredits } = useContext(AppContext);
+
+//   // Google Pay configuration
+//   const merchantInfo = {
+//     merchantId: '12345678901234567890',
+//     merchantName: 'Imagify'
+//   };
+
+//   const baseGooglePayRequest = {
+//     apiVersion: 2,
+//     apiVersionMinor: 0,
+//     allowedPaymentMethods: [
+//       {
+//         type: 'CARD',
+//         parameters: {
+//           allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+//           allowedCardNetworks: ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD", "VISA"]
+//         },
+//         tokenizationSpecification: {
+//           type: 'PAYMENT_GATEWAY',
+//           parameters: {
+//             gateway: 'example',
+//             gatewayMerchantId: 'exampleGatewayMerchantId'
+//           }
+//         }
+//       }
+//     ],
+//     merchantInfo
+//   };
+
+//   let paymentsClient = null;
+
+//   const getGooglePaymentsClient = () => {
+//     if (paymentsClient === null && window.google) {
+//       paymentsClient = new window.google.payments.api.PaymentsClient({
+//         environment: 'TEST',
+//         merchantInfo
+//       });
+//     }
+//     return paymentsClient;
+//   };
+
+//   const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
+
+//   const onGooglePaymentButtonClicked = (plan) => {
+//     if (!plan) return;
+
+//     const req = {
+//       ...deepCopy(baseGooglePayRequest),
+//       transactionInfo: {
+//         countryCode: 'IN',
+//         currencyCode: 'INR',
+//         totalPriceStatus: 'FINAL',
+//         totalPrice: plan.price.toString(),
+//       }
+//     };
+
+//     getGooglePaymentsClient()
+//       .loadPaymentData(req)
+//       .then(function(res) {
+//         console.log("Payment Data:", res);
+//         setPaymentMessage(`✅ Payment of ₹${plan.price} successful! ${plan.credits} credits added.`);
+        
+//         // Add credits to user account
+//         if (purchaseCredits) {
+//           purchaseCredits(plan.id, plan.credits);
+//         }
+        
+//         setSelectedPlan(null);
+//       })
+//       .catch(function(error) {
+//         console.error(error);
+//         setPaymentMessage(`❌ Payment failed. Please try again.`);
+//       });
+//   };
+
+//   const renderGooglePayButton = (plan) => {
+//     if (!window.google || !getGooglePaymentsClient()) return null;
+
+//     const button = getGooglePaymentsClient().createButton({
+//       onClick: () => onGooglePaymentButtonClicked(plan)
+//     });
+
+//     return button;
+//   };
+
+//   const handlePurchaseClick = (plan) => {
+//     if (!user) {
+//       alert('Please login first!');
+//       return;
+//     }
+//     setSelectedPlan(plan);
+//     setPaymentMessage('');
+//   };
+
+//   // Load Google Pay script
+//   useEffect(() => {
+//     const script = document.createElement('script');
+//     script.src = 'https://pay.google.com/gp/p/js/pay.js';
+//     script.async = true;
+//     script.onload = () => {
+//       const req = deepCopy(baseGooglePayRequest);
+//       if (window.google) {
+//         getGooglePaymentsClient()
+//           .isReadyToPay(req)
+//           .then(function(res) {
+//             if (!res.result) {
+//               console.log("Google Pay is not ready for this user.");
+//             }
+//           })
+//           .catch(console.error);
+//       }
+//     };
+//     document.head.appendChild(script);
+
+//     return () => {
+//       document.head.removeChild(script);
+//     };
+//   }, []);
 
 //   return (
 //     <div className={`${darkMode ? 'dark' : ''}`}>
@@ -38,25 +161,65 @@
 //           </p>
 //         </div>
 
-//         {/* 💳 Plans */}
+//         {/* Payment Message */}
+//         {paymentMessage && (
+//           <div className="relative z-10 text-center mb-8">
+//             <p className="text-lg font-bold">{paymentMessage}</p>
+//           </div>
+//         )}
+
+//         {/* 💳 Plans with Google Pay */}
 //         <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
 //           {plans.map((item, index) => (
 //             <div
 //               key={index}
-//               className="mb-12 rounded-2xl p-6 bg-gradient-to-br from-[#1e293b]/90 to-[#0f172a]/90 dark:from-white dark:to-gray-100 border border-blue-600/30 dark:border-gray-300 backdrop-blur-md shadow-xl hover:shadow-blue-600/40 hover:shadow-neon transition-all duration-300 hover:scale-105"
+//               className="mb-6 flex flex-col justify-between rounded-2xl p-6 bg-gradient-to-br from-[#1e293b]/90 to-[#0f172a]/90 dark:from-white dark:to-gray-100 border border-blue-600/30 dark:border-gray-300 backdrop-blur-md shadow-xl hover:shadow-blue-600/40 hover:shadow-neon transition-all duration-300 hover:scale-105"
 //             >
-//               <div className="flex justify-center mb-4">
-//                 <img
-//                   src={assets.logo_icon}
-//                   alt="Plan Icon"
-//                   className="h-10 w-10 opacity-80"
-//                 />
+//               <div>
+//                 <div className="flex justify-center mb-4">
+//                   <img
+//                     src={assets.logo_icon}
+//                     alt="Plan Icon"
+//                     className="h-10 w-10 opacity-80"
+//                   />
+//                 </div>
+
+//                 <h2 className="text-2xl font-bold mb-2 text-center">{item.id}</h2>
+//                 <p className="text-gray-300 dark:text-gray-600 mb-4 text-center">{item.desc}</p>
+//                 <p className="text-lg font-medium text-center mb-6">
+//                   ₹{item.price} / <span className="text-indigo-300 dark:text-indigo-600">{item.credits} credits</span>
+//                 </p>
 //               </div>
-//               <h2 className="text-2xl font-bold mb-2">{item.id}</h2>
-//               <p className="text-gray-300 dark:text-gray-600 mb-4">{item.desc}</p>
-//               <p className="text-lg font-medium">
-//                 {item.price} / <span className="text-indigo-300 dark:text-indigo-600">{item.credits} credits</span>
-//               </p>
+
+//               {/* Purchase Button or Google Pay */}
+//               {selectedPlan?.id === item.id && user ? (
+//                 <div className="mt-auto">
+//                   <div 
+//                     id={`gpay-container-${item.id}`} 
+//                     className="flex justify-center mb-4"
+//                     ref={(el) => {
+//                       if (el && window.google && getGooglePaymentsClient()) {
+//                         el.innerHTML = '';
+//                         const button = renderGooglePayButton(item);
+//                         if (button) el.appendChild(button);
+//                       }
+//                     }}
+//                   ></div>
+//                   <button
+//                     onClick={() => setSelectedPlan(null)}
+//                     className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300"
+//                   >
+//                     Cancel
+//                   </button>
+//                 </div>
+//               ) : (
+//                 <button
+//                   onClick={() => handlePurchaseClick(item)}
+//                   className="mt-auto w-full bg-indigo-600 hover:bg-indigo-700 text-white dark:text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-indigo-400/50 transition duration-300"
+//                 >
+//                   {user ? 'Purchase' : 'Get Started'}
+//                 </button>
+//               )}
 //             </div>
 //           ))}
 //         </div>
@@ -67,12 +230,141 @@
 
 // export default BuyPage;
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { plans, assets } from '../assets/assets';
-import {  AppContext } from '../context/AppContext';
+import { AppContext } from '../context/AppContext';
+
 const BuyPage = () => {
   const [darkMode, setDarkMode] = useState(true);
-  const {user}= useContext(AppContext);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [paymentMessage, setPaymentMessage] = useState('');
+  const { user, purchaseCredits, credit, loadCreditsData } = useContext(AppContext);
+
+  // Google Pay configuration
+  const merchantInfo = {
+    merchantId: '12345678901234567890',
+    merchantName: 'Imagify'
+  };
+
+  const baseGooglePayRequest = {
+    apiVersion: 2,
+    apiVersionMinor: 0,
+    allowedPaymentMethods: [
+      {
+        type: 'CARD',
+        parameters: {
+          allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+          allowedCardNetworks: ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD", "VISA"]
+        },
+        tokenizationSpecification: {
+          type: 'PAYMENT_GATEWAY',
+          parameters: {
+            gateway: 'example',
+            gatewayMerchantId: 'exampleGatewayMerchantId'
+          }
+        }
+      }
+    ],
+    merchantInfo
+  };
+
+  let paymentsClient = null;
+
+  const getGooglePaymentsClient = () => {
+    if (paymentsClient === null && window.google) {
+      paymentsClient = new window.google.payments.api.PaymentsClient({
+        environment: 'TEST',
+        merchantInfo
+      });
+    }
+    return paymentsClient;
+  };
+
+  const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
+
+  const onGooglePaymentButtonClicked = async (plan) => {
+    if (!plan) return;
+
+    const req = {
+      ...deepCopy(baseGooglePayRequest),
+      transactionInfo: {
+        countryCode: 'IN',
+        currencyCode: 'INR',
+        totalPriceStatus: 'FINAL',
+        totalPrice: plan.price.toString(),
+      }
+    };
+
+    try {
+      const res = await getGooglePaymentsClient().loadPaymentData(req);
+      console.log("Payment Data:", res);
+      
+      // ✅ Add credits to backend and update state
+      const success = await purchaseCredits(plan.id, plan.credits);
+      
+      if (success) {
+        // ✅ Refresh credits from backend to get latest count
+        await loadCreditsData();
+        
+        // ✅ Show success message with updated credit count
+        setPaymentMessage(`✅ Payment of ₹${plan.price} successful! ${plan.credits} credits added. Total Credits: ${credit + plan.credits}`);
+      } else {
+        setPaymentMessage(`❌ Payment processed but failed to add credits. Please contact support.`);
+      }
+      
+      setSelectedPlan(null);
+    } catch (error) {
+      console.error(error);
+      setPaymentMessage(`❌ Payment failed. Please try again.`);
+    }
+  };
+
+  const renderGooglePayButton = (plan) => {
+    if (!window.google || !getGooglePaymentsClient()) return null;
+
+    const button = getGooglePaymentsClient().createButton({
+      onClick: () => onGooglePaymentButtonClicked(plan)
+    });
+
+    return button;
+  };
+
+  const handlePurchaseClick = (plan) => {
+    if (!user) {
+      alert('Please login first!');
+      return;
+    }
+    setSelectedPlan(plan);
+    setPaymentMessage('');
+  };
+
+  // Load Google Pay script
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://pay.google.com/gp/p/js/pay.js';
+    script.async = true;
+    script.onload = () => {
+      const req = deepCopy(baseGooglePayRequest);
+      if (window.google) {
+        getGooglePaymentsClient()
+          .isReadyToPay(req)
+          .then(function(res) {
+            if (!res.result) {
+              console.log("Google Pay is not ready for this user.");
+            }
+          })
+          .catch(console.error);
+      }
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
+    };
+  }, []);
+
   return (
     <div className={`${darkMode ? 'dark' : ''}`}>
       {/* 🌗 Dark Mode Toggle */}
@@ -105,9 +397,24 @@ const BuyPage = () => {
           <p className="text-gray-300 dark:text-gray-600 text-lg">
             Flexible AI plans tailored for creators, developers, and teams
           </p>
+          {/* ✅ Show current credits */}
+          {user && credit !== null && (
+            <p className="text-xl text-blue-400 mt-4">
+              Current Credits: {credit}
+            </p>
+          )}
         </div>
 
-        {/* 💳 Plans with "Get Started" */}
+        {/* Payment Message */}
+        {paymentMessage && (
+          <div className="relative z-10 text-center mb-8">
+            <div className="bg-slate-800/80 rounded-lg p-4 max-w-md mx-auto">
+              <p className="text-lg font-bold">{paymentMessage}</p>
+            </div>
+          </div>
+        )}
+
+        {/* 💳 Plans with Google Pay */}
         <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
           {plans.map((item, index) => (
             <div
@@ -126,19 +433,39 @@ const BuyPage = () => {
                 <h2 className="text-2xl font-bold mb-2 text-center">{item.id}</h2>
                 <p className="text-gray-300 dark:text-gray-600 mb-4 text-center">{item.desc}</p>
                 <p className="text-lg font-medium text-center mb-6">
-                  {item.price} / <span className="text-indigo-300 dark:text-indigo-600">{item.credits} credits</span>
+                  ₹{item.price} / <span className="text-indigo-300 dark:text-indigo-600">{item.credits} credits</span>
                 </p>
               </div>
 
-              {/* 🟦 Get Started Button */}
-              <button
-                onClick={() => alert(`Getting started with ${item.id} plan!`)}
-                className="mt-auto w-full bg-indigo-600 hover:bg-indigo-700
-                 text-white dark:text-white font-semibold py-2 px-4 rounded-lg shadow-md 
-                 hover:shadow-indigo-400/50 transition duration-300"
-              >
-               {user ? 'Purchase' : 'Get Started' } 
-              </button>
+              {/* Purchase Button or Google Pay */}
+              {selectedPlan?.id === item.id && user ? (
+                <div className="mt-auto">
+                  <div 
+                    id={`gpay-container-${item.id}`} 
+                    className="flex justify-center mb-4"
+                    ref={(el) => {
+                      if (el && window.google && getGooglePaymentsClient()) {
+                        el.innerHTML = '';
+                        const button = renderGooglePayButton(item);
+                        if (button) el.appendChild(button);
+                      }
+                    }}
+                  ></div>
+                  <button
+                    onClick={() => setSelectedPlan(null)}
+                    className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => handlePurchaseClick(item)}
+                  className="mt-auto w-full bg-indigo-600 hover:bg-indigo-700 text-white dark:text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-indigo-400/50 transition duration-300"
+                >
+                  {user ? 'Purchase' : 'Get Started'}
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -148,5 +475,4 @@ const BuyPage = () => {
 };
 
 export default BuyPage;
-
 

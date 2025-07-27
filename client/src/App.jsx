@@ -22,7 +22,12 @@ const Home = () => {
 
   const onClickHandler = () => {
     if (user) {
-      navigate('/result'); // ✅ navigate function call
+      if(prompt.trim()){
+        navigate('/result')
+      }
+      else{
+        alert('Please enter a prompt to generate images');
+      }
     } else {
       setShowLogin(true);
     }
@@ -109,7 +114,8 @@ const Home = () => {
         width: '100%',
         maxWidth: '500px'
       }}>
-        <div style={{ display: 'flex', gap: '1rem' , alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: '1rem' , 
+          alignItems: 'center', justifyContent: 'center' }}>
           
           <button
             onClick={onClickHandler}

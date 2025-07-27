@@ -86,7 +86,38 @@ const userCredits = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 };
+const purchaseCredits = async (req, res) => {
+    try {
+        const { userId, planId, credits } = req.body;
+
+        if (!userId || !planId || !credits) {
+            return res.json({ success: false, message: 'Missing Details' });
+        }
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' });
+        }
+
+        // ✅ Add credits to user's balance
+        const updatedUser = await userModel.findByIdAndUpdate(
+            userId,
+            { $inc: { creditBalance: credits } },
+            { new: true }
+        );
+
+        res.json({
+            success: true,
+            message: `Successfully purchased ${credits} credits!`,
+            credits: updatedUser.creditBalance,
+            user: { name: updatedUser.name }
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
 
 
-
-export { registerUser, loginUser, userCredits };
+export { registerUser, loginUser, userCredits, purchaseCredits };
