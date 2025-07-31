@@ -26,7 +26,10 @@ const PORT = process.env.PORT || 4000;
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "*", // Allow all origins (for testing only)
+  credentials: true
+}));
 app.use('/api/user', userRouter);
 app.use('/api/image', imageRouter);
 app.get('/', (req, res) => res.send("API Working fine"));
